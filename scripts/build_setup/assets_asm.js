@@ -4,7 +4,7 @@ const srcGenDir = './src/gen/assets';
 const assetsDir = 'assets';
 
 const extensionMap = {
-    'bmp' : 'gtg.deflate',
+    'bmp' : 'gtg',
     'bmpx': 'gtgx',
     'mid' : 'gtm2',
     'json' : 'gsi'
@@ -78,7 +78,7 @@ function sliceLargeBitmaps(dir) {
             }
         }
         return [{
-            name: filename, 
+            name: filename,
             loadName: filename,
             ext,
             sequence: 0,
@@ -189,7 +189,7 @@ function generateAssetsCFile(dir, bankNumber, folder) {
             };`);
         });
     });
-    
+
 
     return [
         `//@generated`,
@@ -272,7 +272,7 @@ function generateAssetAssemblyFiles(assetFolderNames, moduleAssetBanks, folderBa
             const assetsHeader = generateAssetsHeaderFile(`./${currentAssetsDir}/${folder}`, bankNumber, collectFunc);
             const assetsCFile = generateAssetsCFile(`./${currentAssetsDir}/${folder}`, folderBankMap[folder],
             folder);
-            
+
             const assetsHeaderName = `${folder}.h`;
             const assetsCName = `${folder}__loaders.c`
             const genDir = (assetBank.module == null) ? srcGenDir : `./modules/${assetBank.module}/src/gen/assets`;

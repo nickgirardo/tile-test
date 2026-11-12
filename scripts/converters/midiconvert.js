@@ -1,6 +1,6 @@
 const fs = require("fs");
 const parseMidi = require("midi-file").parseMidi;
-const getAssetConfig = require("../common/assetConfig").getAssetConfig;
+const getAssetConfig = require("./assetConfig").getAssetConfig;
 const path = require('path');
 
 const SongFlags = {

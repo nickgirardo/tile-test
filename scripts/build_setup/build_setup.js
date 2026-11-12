@@ -5,8 +5,11 @@ const fs = require('fs');
 
 const assetsDir = './assets';
 const modulesDir = './modules';
+
+const outputDirName = './build/';
 const linkerConfigFileName = './build/gametank-2M.cfg';
 const bankMakeListFileName = './build/bankMakeList.inc';
+
 const bankNumHeaderFileName = './src/gen/bank_nums.h';
 const modulesHeaderFileName = './src/gen/modules_enabled.h';
 const modulesAsmFileName = './src/gen/modules_enabled.inc';
@@ -44,12 +47,17 @@ const allAssetBanks = [...dirInfo, ...moduleAssetBankNames];
 
 const buildCfg = LinkerConfig.generateLinkerConfig(allAssetBanks, projectConfig.progbanks);
 
+// Ensure the output directory exists before attempting to write files to it
+if (!fs.existsSync(outputDirName)) {
+  fs.mkdirSync(outputDirName, { recursive: true });
+}
+
 fs.writeFileSync(linkerConfigFileName, buildCfg.linker);
 fs.writeFileSync(bankMakeListFileName, buildCfg.bankMakeList);
 
 AssetAssembly.generateAssetAssemblyFiles(dirInfo, moduleAssetBanks, buildCfg.folderBankMap);
 
-fs.writeFileSync(bankNumHeaderFileName, 
+fs.writeFileSync(bankNumHeaderFileName,
     `//@generated
 //Editing this manually is not recommended
 //This file contains bank numbers for segments not associated with asset folders
@@ -57,7 +65,7 @@ ${buildCfg.bankNumbers.map((bank) => `#define BANK_${bank.name} ${bank.num}`).jo
 `
 );
 
-fs.writeFileSync(modulesHeaderFileName, 
+fs.writeFileSync(modulesHeaderFileName,
     `//@generated
 //Editing this manually is not recommended
 //This file tells the SDK optional features which ones are enabled
@@ -65,7 +73,7 @@ ${projectConfig.modules.map((mod) => `#define ENABLE_MODULE_${mod}`).join('\n')}
 `
 );
 
-fs.writeFileSync(modulesAsmFileName, 
+fs.writeFileSync(modulesAsmFileName,
     `;@generated
 ;Editing this manually is not recommended
 ;This file tells the SDK optional features which ones are enabled

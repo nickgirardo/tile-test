@@ -85,25 +85,23 @@ $(BANKS): $(ODIR)/bankMakeList.inc $(ASSETOBJS) $(AOBJS) $(COBJS) $(ACP_OBJS) $(
 	@mkdir -p $(@D)
 	$(LN) $(LFLAGS) $(ASSETOBJS) $(AOBJS) $(COBJS) -o $(ROMDIR)/$(TARGET) $(LLIBS)
 
-$(ODIR)/%.gtg: %.bmp | scripts/converters/node_modules
+$(ODIR)/%.gtg: %.bmp
 	@mkdir -p $(@D)
-	cd scripts/converters ;\
-	$(ZOP2) --deflate $(shell cd scripts/converters && node sprite_convert.js ../../$< ../../$@)
+	echo 'SPRITE CONVERT'
+	node $(CONVERTERS)/sprite_convert.js $< $@
 
-$(ODIR)/%.gtm2: %.mid | scripts/converters/node_modules
+$(ODIR)/%.gtm2: %.mid
 	@mkdir -p $(@D)
 	echo 'MIDI CONVERTING'
-	cd scripts/converters ;\
-	node midiconvert.js ../../$< ../../$@
+	node $(CONVERTERS)/midiconvert.js $< $@
 
 $(ODIR)/%.deflate: $(ODIR)/%
 	@mkdir -p $(@D)
 	$(ZOP) --deflate $<
 
-$(ODIR)/%.gsi: %.json | scripts/converters/node_modules
+$(ODIR)/%.gsi: %.json
 	@mkdir -p $(@D)
-	cd scripts/converters ;\
-	node sprite_metadata.js ../../$< ../../$@
+	node $(CONVERTERS)/sprite_metadata.js $< $@
 
 $(ODIR)/%.bin: %.bin
 	@mkdir -p $(@D)
@@ -150,10 +148,6 @@ $(ODIR)/src/gt/crt0.o: src/gt/crt0.s $(ODIR)/src/gt/audio/sdk_default_fm.acp.bin
 	@mkdir -p $(@D)
 	$(AS) $(AFLAGS) -o $@ $<
 
-scripts/%/node_modules:
-	cd scripts/$* ;\
-	npm install
-
 dummy%:
 	@:
 
@@ -172,25 +166,16 @@ flash: $(ODIR)/bankMakeList.inc $(BANKS)
 emulate: $(ROMDIR)/$(TARGET)
 	$(EMUPATH)/build/GameTankEmulator $(ROMDIR)/$(TARGET)
 
-scripts/build_setup/node_modules: scripts/build_setup/package.json
-	cd scripts/build_setup ;\
-	npm install
-
-scripts/converters/node_modules: scripts/converters/package.json
-	cd scripts/converters ;\
-	npm install
-
-
-$(ODIR)/%.cfg $(ODIR)/%.inc src/gen/assets/%.s.asset: project.json scripts/build_setup/*.js scripts/build_setup/node_modules
+$(ODIR)/%.cfg $(ODIR)/%.inc src/gen/assets/%.s.asset: project.json
 	mkdir -p $(ODIR)
 	find assets -type f -name '*:Zone.Identifier' -delete
-	node ./scripts/build_setup/build_setup.js
+	node $(BUILD_SETUP)/build_setup.js
 	if [ -n "$(wildcard assets/*/*.json)" ]; then \
 		for json_file in assets/*/*.json; do \
 			inc_name=$$(basename $$json_file); \
 			dir_name=$$(dirname $$json_file); \
 			mkdir -p src/gen/$$dir_name; \
-			node ./scripts/build_setup/frame_import.js $$json_file src/gen/$$dir_name/$$inc_name.h; \
+			node $(BUILD_SETUP)/frame_import.js $$json_file src/gen/$$dir_name/$$inc_name.h; \
 		done \
 	fi
 
