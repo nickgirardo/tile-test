@@ -46,7 +46,7 @@ JSONSRC := $(shell $(FIND) assets -name "*.json")
 ASSETLISTS := $(shell $(FIND) src/gen/assets -name "*.s.asset")
 ASSETOBJS = $(filter-out $(ASSETLISTS),$(patsubst %,$(ODIR)/%,$(ASSETLISTS:s.asset=o.asset)))
 
-BMPOBJS = $(patsubst %,$(ODIR)/%,$(BMPSRC:bmp=gtg.deflate))
+BMPOBJS = $(patsubst %,$(ODIR)/%,$(BMPSRC:bmp=gtg))
 MIDOBJS = $(patsubst %,$(ODIR)/%,$(MIDSRC:mid=gtm2))
 JSONOBJS = $(patsubst %,$(ODIR)/%,$(JSONSRC:json=gsi))
 

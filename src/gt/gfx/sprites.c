@@ -1,8 +1,12 @@
 #include "sprites.h"
 #include "gametank.h"
 #include "banking.h"
-#include <zlib.h>
 #include "../../gen/bank_nums.h"
+
+#include <string.h>
+
+// TODO still needed?
+#include <zlib.h>
 
 /*
     For each sprite bank:
@@ -53,7 +57,8 @@ void load_spritesheet(const unsigned char* spriteData, char srcBank, char ramBan
     *dma_flags = flagsMirror;
     banksMirror = bankflip | GRAM_PAGE(ramBank);
     *bank_reg = banksMirror;
-    inflatemem(vram, spriteData);
+    // TODO hardcoded
+    memcpy(vram, spriteData, 16384);
     flagsMirror = oldFlags;
     banksMirror = oldBanks;
     *dma_flags = flagsMirror;
