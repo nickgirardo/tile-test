@@ -1,8 +1,6 @@
 .export _soft_draw_tilemap
-.importzp sp, tmp1, tmp2, ptr1, ptr2
-.import incsp2, pushax
+.importzp ptr1, ptr2
 .import _tilemap, _ASSET__font__bios8_bmp_ptr
-
 
 .segment	"DATA"
 
@@ -35,6 +33,25 @@ LoopOverTiles:
         adc #$40
         sta ptr1+1
 
+        ;; Set the index on the tilemap to be copied from
+        ;; Similar calculations as above
+        ;; Low byte
+        lda _tilemap, x
+        and #$0f
+        asl a
+        asl a
+        asl a
+        clc
+        adc #<_ASSET__font__bios8_bmp_ptr
+        sta ptr2
+        ;; High byte
+        lda _tilemap, x
+        and #$f0
+        lsr a
+        lsr a
+        adc #>_ASSET__font__bios8_bmp_ptr
+        sta ptr2+1
+
 
         ;; NOTE label currently unused
 DrawTile:
@@ -43,39 +60,54 @@ DrawTile:
 
         .repeat 4
         ;; TODO this should instead be setting ptr2 to tilemap as ptr1 is set above
-        lda _tilemap, x
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
 
         ldy #$80
 
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
         iny
+        lda (ptr2), y
         sta (ptr1), y
 
         ldy #$00
@@ -83,6 +115,10 @@ DrawTile:
         lda ptr1+1
         inc a
         sta ptr1+1
+
+        lda ptr2+1
+        inc a
+        sta ptr2+1
 
         .endrepeat
 

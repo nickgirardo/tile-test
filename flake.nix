@@ -79,7 +79,7 @@
 
         preBuildPhase = "node $BUILD_SETUP/build_setup.js";
 
-        buildPhase = "make --debug=v bin/game.gtr";
+        buildPhase = "make bin/game.gtr";
 
         installPhase = ''
             mkdir -p $out/bin

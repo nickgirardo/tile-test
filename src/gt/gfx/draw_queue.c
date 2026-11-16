@@ -66,7 +66,6 @@ void queue_draw_box(unsigned char x, unsigned char y, unsigned char w, unsigned 
     rect.c = ~c;
     queue_flags_param = DMA_COLORFILL_ENABLE | DMA_OPAQUE;
     pushRect();
-    
 
     if(queue_pending == 0) {
         next_draw_queue();
@@ -103,6 +102,32 @@ void queue_clear_border(char c) {
         SCREEN_HEIGHT-BORDER_BOTTOM_HEIGHT,
         c
     );
+}
+
+void queue_draw_img(SpriteSlot sprite, char x, char y, char w, char h) {
+    while(queue_count >= QUEUE_MAX) {
+        asm("CLI");
+        await_drawing();
+    }
+    asm("SEI");
+
+    queue_flags_param = DMA_GCARRY;
+    rect.b = bankflip;
+
+    rect.x = x;
+    rect.y = y;
+
+    rect.gx = 0;
+    rect.gy = 0;
+    rect.w = w;
+    rect.h = h;
+
+    pushRect();
+
+    if(queue_pending == 0) {
+        next_draw_queue();
+    }
+    asm("CLI");
 }
 
 void queue_draw_sprite_frame(SpriteSlot sprite, char x, char y, char frame, char flip) {

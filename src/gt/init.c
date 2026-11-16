@@ -32,7 +32,7 @@ void sdk_init() {
             DIRECT_DRAW_COLOR(0, 127, 127, 1, BG_COLOR);
             await_drawing();
         }
-        
+
         if(logo_state < 120 + (sizeof(fadeout_colors)<<2)) {
             if(logo_state > 120) {
                 draw_gametank_logo(~fadeout_colors[(logo_state - 120) >> 2]);

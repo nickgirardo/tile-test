@@ -43,7 +43,9 @@ void main () {
 
     // Run forever
     while (1) {
-        queue_clear_screen(3);
+        PROFILER_START(1);
+        queue_draw_img(0, 0, 0, 127, 127);
+        PROFILER_END(1);
         queue_draw_box(box_x, box_y, 8, 8, 92);
         queue_clear_border(0);
 
