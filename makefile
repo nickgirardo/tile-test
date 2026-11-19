@@ -43,12 +43,15 @@ BMPSRC := $(shell $(FIND) assets -name "*.bmp")
 $(info bmpsrc is $(BMPSRC))
 MIDSRC := $(shell $(FIND) assets -name "*.mid")
 JSONSRC := $(shell $(FIND) assets -name "*.json")
+LEVELDATA_SRC := $(shell $(FIND) assets -name "*.leveldata")
+
 ASSETLISTS := $(shell $(FIND) src/gen/assets -name "*.s.asset")
 ASSETOBJS = $(filter-out $(ASSETLISTS),$(patsubst %,$(ODIR)/%,$(ASSETLISTS:s.asset=o.asset)))
 
 BMPOBJS = $(patsubst %,$(ODIR)/%,$(BMPSRC:bmp=gtg))
 MIDOBJS = $(patsubst %,$(ODIR)/%,$(MIDSRC:mid=gtm2))
 JSONOBJS = $(patsubst %,$(ODIR)/%,$(JSONSRC:json=gsi))
+LEVELDATA_OBJS := $(patsubst %,$(ODIR)/%,$(LEVELDATA_SRC:leveldata=lvldata))
 
 BINSRC = $(shell $(FIND) assets -name "*.bin")
 BINOBJS = $(patsubst %,$(ODIR)/%,$(BINSRC))
@@ -84,6 +87,11 @@ $(info ASSETOBJS is $(ASSETOBJS))
 $(BANKS): $(ODIR)/bankMakeList.inc $(ASSETOBJS) $(AOBJS) $(COBJS) $(ACP_OBJS) $(ODIR)/gametank-2M.cfg
 	@mkdir -p $(@D)
 	$(LN) $(LFLAGS) $(ASSETOBJS) $(AOBJS) $(COBJS) -o $(ROMDIR)/$(TARGET) $(LLIBS)
+
+$(ODIR)/%.lvldata: %.leveldata
+	@mkdir -p $(@D)
+	echo 'LVLDATA CONVERT'
+	node $(CONVERTERS)/lvldata_convert.js $< $@
 
 $(ODIR)/%.gtg: %.bmp
 	@mkdir -p $(@D)
@@ -122,7 +130,7 @@ $(ODIR)/src/%.acp.o: src/%.acp.asm
 	@mkdir -p $(@D)
 	$(AS) --cpu W65C02 $< -o $@
 
-$(ODIR)/%.o.asset: %.s.asset $(BMPOBJS) $(JSONOBJS) $(MIDOBJS) $(BINOBJS) $(SFXOBJS)
+$(ODIR)/%.o.asset: %.s.asset $(BMPOBJS) $(JSONOBJS) $(MIDOBJS) $(BINOBJS) $(SFXOBJS) $(LEVELDATA_OBJS)
 	@mkdir -p $(@D)
 	$(AS) $(AFLAGS) -o $@ $<
 
