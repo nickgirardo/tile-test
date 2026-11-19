@@ -1,0 +1,66 @@
+{
+    "activeFile": "smb3.tmx",
+    "console.history": [
+        "ls",
+        "help",
+        "dir",
+        "pwd",
+        "cd"
+    ],
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "1-1.tmx": {
+            "scale": 1.8445525291828793,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 128.75751503006012,
+                "y": -15.721970256302086
+            }
+        },
+        "overworld.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "smb3.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 968.25,
+                "y": 0.25
+            }
+        },
+        "tiles2.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 2
+        }
+    },
+    "last.exportedFilePath": "/home/nick/Documents/tank/tile-test/raw_assets",
+    "last.imagePath": "/home/nick/Documents/tank/tile-test/assets/overworld",
+    "map.height": 16,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.layerDataFormat": null,
+    "map.tileHeight": 8,
+    "map.tileWidth": 8,
+    "map.width": 32,
+    "mapScene.enableWorlds": true,
+    "openFiles": [
+        "1-1.tmx",
+        "smb3.tmx",
+        "tiles2.tsx"
+    ],
+    "project": "overworld.tiled-project",
+    "recentFiles": [
+        "overworld.tsx",
+        "1-1.tmx",
+        "tiles2.tsx",
+        "smb3.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 8,
+        "width": 8
+    }
+}
