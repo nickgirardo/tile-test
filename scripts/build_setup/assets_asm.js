@@ -7,19 +7,27 @@ const extensionMap = {
     'bmp' : 'gtg',
     'bmpx': 'gtgx',
     'mid' : 'gtm2',
-    'json' : 'gsi'
+    'json' : 'gsi',
+    'leveldata' : 'lvldata',
 };
+
+const ensurePageAligned = new Set([
+  'leveldata',
+]);
 
 const ignoreList = [
     "asset.cfg"
 ];
 
-function ignoreFilter(x) { return ignoreList.indexOf(x.name)===-1; }
+function ignoreFilter(x) { return !ignoreList.includes(x.name); }
 function bmpFilter(x) { return x.ext === "bmp"; }
+function extension(filename) { return filename.split('.').at(-1); }
 
 function transformFilename(filename) {
-    const name = filename.split('.').slice(0, -1);
-    const ext = filename.split('.').slice(-1)[0];
+    const split = filename.split('.');
+    const name = split.slice(0, -1);
+    const ext = split.at(-1);
+
     if(extensionMap.hasOwnProperty(ext)) {
         return [...name, extensionMap[ext]].join('.');
     } else {
@@ -33,7 +41,7 @@ function filenameToSymbolName(dirName, fileName) {
 
 function sliceLargeBitmaps(dir) {
     return (filename) => {
-        const ext = filename.split('.').slice(-1)[0];
+        const ext = extension(filename);
         const nameOnly = filename.split('.').slice(0, -1).join('.');
         if(ext === 'bmp') {
             let fileCount = 1;
@@ -111,6 +119,11 @@ function generateAssetsAssemblyFile(assetBank) {
             incbinLines.push(`    .incbin "build/modules/${assetBank.module}/assets/${assetBank.bank}/${transformFilename(x.loadName)}"`);
         }
 
+      // Allow types of assets to force an assertion that they're page aligned
+      // This is done to allow for optimizations based on this assumption
+      if(ensurePageAligned.has(x.ext)) {
+        incbinLines.push(`.assert .lobyte(${symName}_ptr) = 0, lderror, "${x.ext} must be page aligned"`);
+      }
 
         incbinLines.push('');
     });
@@ -231,7 +244,6 @@ extern const unsigned char ASSET__${ext}_bank_table[];
 }
 
 function generateAssetAssemblyFiles(assetFolderNames, moduleAssetBanks, folderBankMap) {
-
     if (fs.existsSync(srcGenDir)){
         fs.rmSync(srcGenDir, { recursive: true });
     }

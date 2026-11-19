@@ -54,6 +54,14 @@ function generateLinkerConfig(assetFolderNames, extra_code_banks) {
             type : 'bss',
             define : 'yes'
         },
+        // I don't believe cc65/ the sdk expose any other mechanism for us to ensure
+        // a c symbol is page aligned
+        // TODO maybe change name to `PAGE_ALIGNED0`
+        TILEMAP : {
+            load : 'RAM',
+            type : 'bss',
+            align : '$0100',
+        },
         HEAP : {
             load : 'RAM',
             type : 'bss',
