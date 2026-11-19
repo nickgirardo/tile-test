@@ -104,7 +104,7 @@ void queue_clear_border(char c) {
     );
 }
 
-void queue_draw_img(SpriteSlot sprite, char x, char y, char w, char h) {
+void queue_draw_img(SpriteSlot sprite, char x, char y, char w, char h, char gx, char gy) {
     while(queue_count >= QUEUE_MAX) {
         asm("CLI");
         await_drawing();
@@ -112,13 +112,16 @@ void queue_draw_img(SpriteSlot sprite, char x, char y, char w, char h) {
     asm("SEI");
 
     queue_flags_param = DMA_GCARRY;
-    rect.b = bankflip;
+    rect.b = (sprite & BANK_GRAM_MASK) | bankflip;
 
     rect.x = x;
     rect.y = y;
 
-    rect.gx = 0;
-    rect.gy = 0;
+    rect.gx = gx;
+    if(sprite & SPRITE_OFFSET_X_MASK) { rect.gx |= 128; }
+    rect.gy = gy | (sprite & BANK_CLIP_Y);
+    if(sprite & SPRITE_OFFSET_Y_MASK) { rect.gy |= 128; }
+
     rect.w = w;
     rect.h = h;
 

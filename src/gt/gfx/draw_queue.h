@@ -16,7 +16,7 @@ void queue_draw_sprite_rect();
 
 #define queue_draw_sprite(X,Y,W,H,GX,GY,SPRITESLOT) rect.x=X;rect.y=Y;rect.w=W;rect.h=H;rect.gx=GX;rect.gy=GY;rect.b=SPRITESLOT;queue_draw_sprite_rect();
 void queue_draw_sprite_frame(SpriteSlot sprite, char x, char y, char frame, char flip);
-void queue_draw_img(SpriteSlot sprite, char x, char y, char w, char h);
+void queue_draw_img(SpriteSlot sprite, char x, char y, char w, char h, char gx, char gy);
 
 void queue_clear_border(char c);
 void queue_clear_screen(char c);
