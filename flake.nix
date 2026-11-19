@@ -85,6 +85,9 @@
             mkdir -p $out/bin
             cp -r bin $out
 
+            # For testing, output linker config
+            cp build/gametank-2M.cfg $out
+
             # TODO web output not built? why?
             # mkdir -p $out/web
             # cp -r web $out
